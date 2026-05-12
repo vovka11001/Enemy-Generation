@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class Spawner : MonoBehaviour
 {
+    [SerializeField] private Transform _capsuleSpawnPoint;
+    [SerializeField] private Transform _sphereSpawnPoint;
+    [SerializeField] private Transform _cylinderSpawnPoint;
     [SerializeField] private Capsule _capsulePrefab;
+    [SerializeField] private Sphere _spherePrefab;
+    [SerializeField] private Cylinder _cylinderPrefab;
     [SerializeField] private SpawnPoint[] _spawnPoints;
-    [SerializeField] private float _speed;
+    [SerializeField] private Mover _mover;
 
     private List<Capsule> _addedCapsules = new List<Capsule>();
-
+    private List<Cylinder> _addedCylinders = new List<Cylinder>();
+    private List<Sphere> _addedShperes= new List<Sphere>();
+    
     private static float _elapsedTime = 2f;
     private bool _isCounting;
+    
     private WaitForSeconds _waitForSeconds = new WaitForSeconds(_elapsedTime);
     private Coroutine _coroutine;
 
@@ -24,18 +31,16 @@ public class Spawner : MonoBehaviour
     private void Update()
     {
         if(_addedCapsules != null)
-        {
             foreach (var capsule in _addedCapsules)
-            {
-                Move(capsule);
-            }
-        }
-    }
-
-    private void Move(Capsule capsule)
-    {
-        if(capsule != null)
-            capsule.transform.Translate(Vector3.forward * _speed * Time.deltaTime);
+                _mover.Move(capsule);
+        
+        if (_addedCylinders != null)
+            foreach (var cylinder in _addedCylinders)
+                _mover.Move(cylinder);
+        
+        if (_addedShperes != null)
+            foreach (var shpere in _addedShperes)
+                _mover.Move(shpere);
     }
 
     private void StartCountDown()
@@ -54,16 +59,29 @@ public class Spawner : MonoBehaviour
     { 
         while (_isCounting)
         {
-            int randomSpawn = Random.Range(0, _spawnPoints.Length);
-            SpawnPoint spawnPoint = _spawnPoints[randomSpawn];
-
-            float rotationY = Random.Range(0f, 360f);
-            Quaternion rotation = Quaternion.Euler(0, rotationY, 0);
-
-            Capsule capsule = Instantiate(_capsulePrefab, spawnPoint.transform.position, rotation);
-            _addedCapsules.Add(capsule);
+            ClonePrefabs(_capsulePrefab, _addedCapsules);
+            ClonePrefabs(_spherePrefab, _addedShperes);
+            ClonePrefabs(_cylinderPrefab, _addedCylinders);
 
             yield return _waitForSeconds;
         }
+    }
+
+    private void ClonePrefabs<T>(T prefab,List<T> addedObjects) where T : Component
+    {
+        Transform spawnTransform = null;
+        
+        if (prefab is Capsule)
+            spawnTransform = _capsuleSpawnPoint;
+        else if (prefab is Sphere)
+            spawnTransform = _sphereSpawnPoint;
+        else if (prefab is Cylinder)
+            spawnTransform = _cylinderSpawnPoint;
+    
+        if (spawnTransform == null)
+            return;
+        
+        var @object = Instantiate(prefab, spawnTransform.transform.position, Quaternion.identity, spawnTransform);
+        addedObjects.Add(@object);
     }
 }

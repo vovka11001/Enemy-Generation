@@ -3,11 +3,11 @@ using UnityEngine;
 [RequireComponent (typeof(Rigidbody))]
 [RequireComponent (typeof(Renderer))]
 
-public class Capsule : MonoBehaviour
+public class Sphere : MonoBehaviour
 {
     private void Awake()
     {
         Renderer renderer = GetComponent<Renderer>();
-        renderer.material.color = Color.red;
+        renderer.material.color = Color.blue;
     }
 }
