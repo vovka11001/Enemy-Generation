@@ -10,7 +10,6 @@ public class Spawner : MonoBehaviour
     [SerializeField] private Capsule _capsulePrefab;
     [SerializeField] private Sphere _spherePrefab;
     [SerializeField] private Cylinder _cylinderPrefab;
-    [SerializeField] private SpawnPoint[] _spawnPoints;
     [SerializeField] private Mover _mover;
 
     private List<Capsule> _addedCapsules = new List<Capsule>();
