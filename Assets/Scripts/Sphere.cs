@@ -2,6 +2,7 @@ using UnityEngine;
 
 [RequireComponent (typeof(Rigidbody))]
 [RequireComponent (typeof(Renderer))]
+[RequireComponent(typeof(Mover))]
 
 public class Sphere : MonoBehaviour
 {
