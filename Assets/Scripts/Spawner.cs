@@ -7,7 +7,7 @@ public class Spawner<T> : MonoBehaviour where T : Component
     [SerializeField] private T _prefab;
     [SerializeField] private SpawnTarget[] _spawnTargets;
 
-    protected List<T> _addedPrefabs = new List<T>();
+    private List<T> _addedPrefabs = new List<T>();
     
     private static float _elapsedTime = 2f;
     private bool _isCounting;
